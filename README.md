@@ -15,8 +15,7 @@ The `SC` folder contains a minimal boot for the project. The `SYNTHDEFS` folder 
 
 ### Samples
 
-Samples are missing as of now, I'll upload asap.
-<!-- Samples are stored in an encrypted .zip file, you can use the password `geikha` to unzip them. This is just a minor measure given some samples count as copyrighted material. -->
+Samples are stored in an encrypted .zip file, you can use the password `geikha` to unzip them.
 
 ## About the licenses
 
