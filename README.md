@@ -7,7 +7,7 @@ Code for Medali & Geikha's single [*BUROCRACIA_JAJA*](https://geikha.bandcamp.co
 
 ### TidalCycles
 
-`BUROCRACIA_JAJA.tidal` contains the code of the song itself. While the `SETUP_250107.tidal` file all possible dependencies for this code, as it's my own personal setup file.
+`BUROCRACIA_JAJA.tidal` contains the code of the song itself. While the `SETUP_250225.tidal` file all possible dependencies for this code, as it's my own personal setup file.
 
 ### SuperCollider
 
