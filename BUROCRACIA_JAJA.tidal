@@ -1,0 +1,229 @@
+-- BUROCRACIA_JAJA
+-- GEIKHA (ORIG. BY MEDALI)
+-- CC BY-NC-SA 4.0
+-- full code at https://github.com/geikha/BUROCRACIA_JAJA
+
+setbpm 150
+
+150/60/4
+
+let note' n = note (scale "minor" n) -- 5A
+
+-- MIX
+let _bd = orbit 0 # "shabdp:2" # sp 2 # sh 0.63 |* g 1.01 # amp 0.6 # cut 1 # lpf 8000
+    _bd2 = orbit 0 # "909bdp:22" |- note 0.12 # cut 1 # sh 0.84 # eq 45 2.8 # amp 0.66 |* g 0.94 # atk 0.8
+    _sfbd = orbit 1 # "660bd:4" # hpf 150 # ar 0.06 1 # e 0.8 |- note 1.5 # sp 1
+    _sd = orbit 2 # "jktnsd" # g 1.02 |- nt 5 # acc 0.1 # rel 0.12 # atk 0.2
+    _tri = orbit 2 # "tri:1" # note "5 0 0" # rel 0.3 # sp 1.5 # hpf 900 # g 0.9
+    _cp = orbit 2 # "808cp2" # sh 0.38 # n 1 # amp 0.62
+    _cp_sup = sup (\x -> x <| "~[~~~1]~~" |* sp 1.333 # hpf 1000 |* g 0.7 # rel 0.1 # coarse 2 # pan 0.4)
+    _oh = orbit 3 # "909oh" # rel 0.2 |* sp 1.49 # hpf 200 |* g 0.97 |- note 5 # b 0.02 # eq 7000 2
+    _hh = orbit 3 # "traphh" # n 4 # rel 0.1 # pan "[0.4 0.65 0.4!2]*2" |* g 0.9
+    _ht = orbit 4 # "808ht" |- note 8.8 # sp 2 # sh 0.2 # hpf 250 # eq' (4250*2) 12 2.2 |* g 0.88
+    _ht2 = orbit 4 # "660ht:6" |- note 13 # sp 2 # sh 0.15 # rel 0.2  # eq 100 (-4) # air 0.5
+    _rim = orbit 5 # "808rim" # n 2 |+ nt 2.5 |* g 0.87
+    _cr = (# orbit 5) $ (chop 24 $ "<808cr ~>/4") |- note ("[0..18]/4"*0.8) # n 10 # b 0.01 # sh 0.88 |* g (range 0.6 0.42 $ slow 4 $ saw) |- note 5 # hpf 3200 # l "<1!3 [1 2]>" # wider 0.7 |+ acc 0.23 |- fshift 450 # coarse "1!3 2" # eq 4500 (-5)
+    _ch = orbit 6 # cut 1 # sh 0.84 |* g 0.88 # hpf 200 # room' 0.16 0.25 # ar 0 0.2 # eq' 175 (-6) 0.2 # eq2' 12000 4 2
+    _ch_sup = offcut (-0.25) ((\x -> x # ar 0.02 0.18 # sp 2 # comb (rotL 0 rand) # pan (randosc 0.3 0.7) # sh 0.4) . (resetTo "[0~]*8"))
+    _vox = orbit 7 # cut 1 # rel 0.4 # hpf 100 # room' 0.017 0.2 # wider 0.1 # sh 0.28 |* g 1.1 # delay' "0 0.05" (nms 7 * 2) 0.93 # eq (9000) 2.1 -- |* g 0
+    _vox_sup = supcut (\x -> x |* sp 0.5 # rel 0.08 # bpf 600 |* g 0.85 # invst # sh 0.4)
+    _vox' = orbit 8 # sh 0.4 # delay' 0.3 0.3 0.2 -- |* g 0
+    _voxdk = orbit 9 # cut 1 # sh 0.2 # g 0.93 # formant 0.9 # delay' 0.3 0.3 0.4 # gater 0.66 # krush 0.8 # coarse 3 # hpf 200 # eq 230 (-9) # eq2 (slow 2 $ range 1500 4000 sine) 4 -- |* g 0
+
+-- VARS
+let kb = g (beat "[0,4,7,12,15]" 16 $ 1)
+    kb2 = foot "<0 10>"
+    kb4x = g "1*4"
+    bsp = "<-7!2 <-7 -4> [-2 -1]>"
+    bsp' = "<-7!2 <-7 -4> [-2 -1]>" |+ "0_3 <2 . 5 0>"
+
+-- song
+
+do
+  setCycle $ 8*(0)
+  hush
+  p "song" $ arrange' [
+    (8,[
+        stack [
+          kb # _bd |+ note' bsp' # rel 0.5
+        ]
+        ,resetTo "0 0.25*1 0.75 .  0" $ chat' 4 8  "burocracia8ch" # _ch
+        ,"<~!7 1>" # "gei_kha:1" # sp (150/160) # fshift 125 # hpf 300 # sh 0.3 # coarse 2 # eq 10000 4 # g 1.07 # gater 0.1
+      ]),
+    (8,[
+        mask "<t!7 [ttf]>" $ stack [
+          kb # _bd |+ note' bsp' # rel 0.5
+          ,un1 "1(3,3) 1(1,2,1)" # _sd
+        ]
+        ,resetTo "0 0.25*1 0.75 .  0" $ chat' 4 8  "burocracia8ch" # _ch
+        ,mask "<f!7 [fft]>" $ chat' 16 8 "burocracia8:0" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [ttf]>" $ stack [
+          kb # _bd |+ note' bsp'
+          ,un1 "1(3,3) 1(1,2,1)" # _sd
+          ,_cr |* g 0.96
+        ]
+        ,resetTo "0 0.25*2 0.75 .  0" $ chat' 4 8  "burocracia8ch" # _ch
+        ,chat' 16 8 "burocracia8:0" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [ttf]>" $ stack [
+          kb # _bd |+ note' bsp'
+          ,sup (# _tri) $ un1 "1(3,3) 1(1,2,1)" # _sd
+        ]
+        ,resetTo "0 0.25*2 0.75 .  0" $ chat' 4 8  "burocracia8ch" # _ch
+        ,chat' 16 8 "burocracia8:1" # _vox
+      ]),
+    (8,[
+        mask "<f!2 t!6>" $ stack [
+          kb # _bd |+ note' bsp' # eq' (635) (-3) (1.2)
+          ,kb4x # _sfbd
+          ,press "1*2" # _cp
+          ,rotR (1/3/32) $ press "1*4" # _oh
+          ,rotR 2 $ _cr # lpf 8000 |* g 0.9
+        ]
+        ,mask "<f[ft]f!6>" $ press "1*2" # _cp |* g 0.92 # ar 0.01 2 # hpf 2000 |+ note 3 # ts 2 # tsw 1.8
+        ,while "<t!2 f!6>" (# lpf 6000) $ resetTo "0 0.25*2 0.75 .  0" $ chat' 4 8  "burocracia8ch" # _ch
+        ,chat' 16 8 "burocracia8:2" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          kb # _bd |+ note' bsp' # coarse 4 # eq' (635) (-3) (1.2)
+          ,kb4x # _sfbd
+          ,press "1*2" # _cp
+          ,rotR (1/4/32) $ press "1*4" # _oh
+        ]
+        ,resetTo "0 0.25*2 0.75 . 0" $ chat' 4 8  "burocracia8ch:1" # _ch # eq2 200 0
+        ,chat' 16 8 "burocracia8:3" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          kb # _bd |+ note' bsp'
+          ,press "1*2" # _cp
+        ]
+        ,resetTo "0 0.25*1 0.75 . 0" $ chat' 16 8  "burocracia8ch:1" # _ch # eq2 200 0
+        ,sometimes (# invst) $ chat' 16 8 "burocracia8:4" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          press "1*2" # _cp |* g 0.9 # lpf 4000 # hpf 800
+        ]
+        ,resetTo "0 0.25*1 0.75 . 0" $ chat' 4 8  "burocracia8ch:0" # _ch # lpf 7000
+        ,chat' 16 8 "burocracia8" # n "<5 0>/4" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          kb4x # _bd2 |+ note' bsp
+          ,kb4x # _sfbd
+          ,press "1*2" # _cp
+          ,mask "<ft>/4" $ swingBy (1/12) 8 $ "1*16" # _hh
+          ,_cr # hpf 6000
+        ]
+        ,resetTo "0 0.25*2 0.75 . 0" $ chat' 4 8  "burocracia8ch:0" # _ch
+        ,_vox_sup $ chat' 16 8 "burocracia8:0" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          kb4x # _bd2 |+ note' bsp |+ acc "0!3 <0 0.25>"
+          ,kb4x # _sfbd
+          ,_cp_sup $ press "1*2" # _cp
+          ,swingBy (1/12) 8 $ "1*16" # _hh
+        ]
+        ,resetTo "0 0.25*2 0.75 . 0" $ chat' 4 8  "burocracia8ch:1" # _ch
+        ,_vox_sup $ mask "<t!7 [ttf]>" $ chat' 16 8 "burocracia8:0" # _vox
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          kb4x # _bd2 |+ note' bsp |+ acc "0!3 <0 -0.25>"
+          ,kb4x # _sfbd
+          ,press "1*2" # _cp
+          ,degby "<1 1 1 1 0.3 0 0 0>" $ "1([11 9],16,[<2 3>])" # _ht |+ note' "[0 4 0 -1]*3" # pan "[0.3 0.7]*3"
+          ,degby 0.2 _cr # hpf 4000 |- note 5 # rel 0.5
+        ]
+        ,resetTo "0 0.25*2 0.75 . 0" $ chat' 16 8  "burocracia8ch:1" # _ch # rel 0.2
+        ,"1" # be' 2.19 1 "<0 1>/4" # "burocracia" # _vox' -- |* sp 0.5
+      ]),
+    (8,[
+        mask "<t!7 [tff]>" $ stack [
+          while "<ft>/4" (# rel 0.5) $ kb4x # _bd2 |+ note' bsp
+          ,kb4x # _sfbd
+          ,press "1*2" # _cp
+          ,degby "<1 1 1 1 0.3 0 0 0>" $ "1([11 9],16,[<2 3>])" # _ht |+ note' "[0 4 0 -1]*3" # pan "[0.3 0.7]*3"
+          ,mask "<t f!7>" $ degby 0.2 _cr # lpf 8000 |- note 5 # rel 0.4 # hpf 3500
+        ]
+        ,resetTo "0 0.25*2 0.75 . 0" $ chat' 16 8  "burocracia8ch:1" # _ch # rel 0.2
+        ,chop 16 $ be' 16 2 "13.52" # "burocracia8:2" # _voxdk
+      ]),
+    (8,[
+        mask "<t!7 [ttf]>" $ stack [
+          kb # _bd |+ note' bsp' # eq' (635) (-4) (1.2)
+          ,kb4x # _sfbd
+          ,mask "<ft>/4" $ press "1*2" # _cp |+ n 2 |* g 0.9
+          ,mask "ftt" $ "1([11 9],16,[<2 3>])" # _ht2 |+ note' "[0 4 0 -1]*3" # pan "[0.3 0.7]*3"
+          ,mask "<[tf] f>" $ "1*16" # _rim
+        ]
+        ,chat' 16 8  "burocracia8ch:1" # _ch # rel 0.2
+      ]),
+    (8,[
+        mask "<t!7 [tf]>" $ stack [
+          kb2 # _bd |+ note' bsp' # eq' (635) (-2) (1.2)
+          ,kb4x # _sfbd
+          ,press "1*2" # _cp |+ n 2 |* g 0.9
+          ,mask "ftt" $ "1([11 9],16,[<2 3>])" # _ht2 |+ note' "[0 4 0 -1]*3" # pan "[0.3 0.7]*3"
+          ,_cr # ar 0.1 0.3 # hpf 4000 |- note 2 |* g 0.9
+          ,"1*16" # _rim
+        ]
+        ,chat' 16 8  "burocracia8ch:1" # _ch # rel 0.2
+        ,"1" # be' 2.18 1 "1" # "burocracia" # _vox' # ts 0.666 # tsw 2 # tsw 1.5 # hpf 400 |* g 0.95 # crush 12
+      ]),
+    (8,[
+        mask "<t!7 [ttf]>" $ stack [
+          kb2 # _bd |+ note' bsp' # ar 0.1 2 # sh 0.4
+          ,mask "<[tf] f>" $ "1*16" # _rim
+        ]
+        ,_ch_sup $ resetTo "0 0.25 0.75 .  0" $ chat' 4 8  "burocracia8ch:1" # _ch
+      ]),
+    (8,[
+        mask "<[tf] f [tf] f [tf] f f f>" $ stack [
+          kb2 # _bd |+ note' bsp' # ar 0.1 2 # sh 0.3
+        ]
+        ,_ch_sup $ resetTo "0 0.25 0.75 .  0" $ chat' 4 8  "burocracia8ch:1" # _ch # eq2 200 0
+        ,"<~!7 1>" # "gei_kha:1" |- acc 0.15 # sp (151/160) # fshift 125 # hpf 300 # sh 0.2 # coarse 2 # eq 10000 3 # g 1.05
+      ]),
+    (8,[silence])
+      ]
+
+-- ORIGINAL
+
+do
+  -- MEDA/BUROKRACIA/GKH;LIVECODED
+  hush
+  all $ id
+  setbpm $ 150
+  let trans = note (0)
+  let note' n = note (scale "minor" n) |+ trans -- 5A
+  let kb = slow 1 $ (rotR (0/8)) $ mono $ g (beat "[0,4,7,12,15]" 16 $ 1)--foot "<0 10>"
+      kb2 = "1*4"
+  let bsp = "<-7!2 <-7 -4> [-2 -1]>"
+      bsp' = bsp |+ "0_3 <2 . 5 0>"
+  d1 $ stack [ silence
+      ,kb # "shabdp:2" # note' bsp' # sp 2 # sh 0.63 |* g 1.01 # amp 0.6 # cut 1 # lpf 8000
+      -- ,kb2 # note' bsp # "909bdp:22" |- note 0.12 # cut 1 # sh 0.85 # eq 45 2.8 # amp 0.66 |* g 0.95 # atk 1
+      -- ,"1*4" # "660bd:4" # hpf 150 # ar 0.06 1 # e 0.8 |- note 1.5 # sp 1
+      ,un1 "1(3,3) 1(1,2,1)" # "jktnsd" # g 1.02 |- nt 5 # acc 0.1 # rel 0.12 # atk 0.2
+      -- ,un1 "1(3,3) 1(1,2,1)" # "tri:1" # note "5 0 0" # rel 0.3 # sp 1.5 # hpf 900 # g 0.9
+      -- ,press "1*2" # "808cp2" # sh 0.38 # n 1 # amp 0.62
+      -- ,rotR (1/4/32) $ id $ press "909oh*4" # re l 0.2 |* sp 1.49 # hpf 200 |* g 0.97 |- note 5 # b 0.02 # eq 7000 2
+      -- ,"traphh*16" # n 4 # rel 0.1 # pan "[0.4 0.65 0.4!2]*2" |* g 0.9
+      -- ,"1([11 9],16,[<2 3>])" # "808ht" |- note 8.8 # sp 2 # sh 0.2 # hpf 250 # eq' (4250*2) 12 2.2 |* g 0.88
+      -- ,mask "ftt" $ "1([11 9],16,[<2 3>])" # "660ht:6" |- note 13 # sp 2 # sh 0.15 # rel 0.2  # eq 100 (-4) # air 0.5
+      -- ,"808rim*16" # n 2 |+ nt 2.5 |* g 0.87
+      -- ,"808cr/8" # n 10 # sh 0.88 |* g 0.6 |- note 5 # hpf 5000 # l "<1!3 [1 2]>" # wider 0.7 |- acc 0.23 |- fshift 450
+    ]
+  d4 -- $ offcut (-0.25) ((\x -> x # ar 0.02 0.18 # sp 2 # comb (rotL 0 rand) # pan (randosc 0.3 0.7) # sh 0.4) . (resetTo "[0~]*8"))
+      $ quant 0 $ resetTo "0 0.25*2 0.75 .  0" $ chat' 4 8  "burocracia8ch:0" # cut 1 # sh 0.84 |* g 0.88 # hpf 200 # room' 0.16 0.3 # ar 0 0.2 # eq' 175 (-6) 0.2 # eq2' 12000 4 2
+  d6 $ chat' 16 8 "burocracia8:0" # cut 1 # rel 0.4 # hpf 100 # room' 0.017 0.2 # wider 0.1 # sh 0.28 |* g 1.1 # delay' "0 0.05" (nms 7 * 2) 0.93  # eq (9000) 2.2
+  -- d8 $ be' 2.19 1 "<0>" # "burocracia" # cut 0 # ts 1 # tsw 2 # sh 0.35 # delay' 0.3 0.3 0.2
+  -- d8 $ chop 16 $ be' 16 2 "13.52" # "burocracia8:2" #cut 1 # sh 0.2 # g 0.93 # formant 0.9 # delay' 0.3 0.3 0.4 # gater 0.66 # krush 0.8 # coarse 3 # hpf 200 # eq 230 (-9) # eq2 (slow 2 $ range 1500 4000 sine) 4
+  getnow 8
