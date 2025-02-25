@@ -31,35 +31,34 @@ The code inside **`SETUP_250107.tidal`** and everything inside the **`SC` folder
 -- CC BY-NC-SA 4.0
 
 do
+  -- MEDA/BUROKRACIA/GKH;LIVECODED
   hush
   all $ id
-  setbpm $ 145
+  setbpm $ 150
   let trans = note (0)
-  let note' n = note (scale "major" n-3) |+ trans -- 11B
-  let kb = slow 1 $ (rotR (0/8)) $ mono $ "1 [<~1~~>1] [~1] [~<~~~1>]"
-  -- let kb = "1*4"
-  let kb2 = slow 1 $ "1(11,16,[<-4 0> 0])"
-  let bsp = "<0 0 0 [4_3 5]>" + "0 2 0 0 0 0"
-  d1 $ echoWith "2 1 1" (1/16) (\x -> x # rel 0.05 # hpf 800 |+ fshift 200 # cut 4 |* g 0.75) $ stack [ silence
-    ,kb # note' bsp # "shabdppsy" # n "0 <1 2>" # cut 1 # sh 0.4 |+ nt 0.1 |* g 1.1 # eq 75 (3)
-    ,kb # "tekbd" |+ note 0 # rel 0.1 # atk 1
-    ,press "1*2" # "r70sd:3" # sh 0.7 |- note 5 # sp 2 # rel "0.5 9"
-    ,press "808sd*2" # n 3
-    -- ,press "1*2" # "grmsd" # rel 0.3 # lpf 4000
-    -- ,"~~~hr16mtl" # n 1 |+ note 4
-    -- ,"impulse*16" |* g 1.6 # hpf 200
-    -- ,rotL 0.02 $ echo 5 (3/16) 0.8 "808oh" |- sp 1 # b 0.05 |- note 1
-    -- ,"~<~~~1>" # "mpc2500:60" |- note 3 |* g 0.9 # e 0.8 # fshift 100 # hpf 300 # wider 0.2
-    -- ,foot 15 # "mpc2500:97" # e 0.5 |+ note 5
-    ] # crush 12 # coarse "1 2" # delay' "[0.045|0]*2" 0.009 0.88 # invst
-  d2 $ stack [ silence
-    -- ,slat' 8 2 "plm2" # sh 0.4 # fshift 400 # g 0.8 # hpf 400
-    -- ,chat' 16 1 "shkr1" # l 1 |- note 5 # rel 0.1 |* g 0.9
-    -- ,chat' 8 4 "rkt2:1" # hpf 300 # fshift 180 # declick
+  let note' n = note (scale "minor" n) |+ trans -- 5A
+  let kb = slow 1 $ (rotR (0/8)) $ mono $ g (beat "[0,4,7,12,15]" 16 $ 1)--foot "<0 10>"
+      kb2 = "1*4"
+  let bsp = "<-7!2 <-7 -4> [-2 -1]>"
+      bsp' = bsp |+ "0_3 <2 . 5 0>"
+  d1 $ stack [ silence
+      ,kb # "shabdp:2" # note' bsp' # sp 2 # sh 0.63 |* g 1.01 # amp 0.6 # cut 1 # lpf 8000
+      -- ,kb2 # note' bsp # "909bdp:22" |- note 0.12 # cut 1 # sh 0.85 # eq 45 2.8 # amp 0.66 |* g 0.95 # atk 1
+      -- ,"1*4" # "660bd:4" # hpf 150 # ar 0.06 1 # e 0.8 |- note 1.5 # sp 1
+      ,un1 "1(3,3) 1(1,2,1)" # "jktnsd" # g 1.02 |- nt 5 # acc 0.1 # rel 0.12 # atk 0.2
+      -- ,un1 "1(3,3) 1(1,2,1)" # "tri:1" # note "5 0 0" # rel 0.3 # sp 1.5 # hpf 900 # g 0.9
+      -- ,press "1*2" # "808cp2" # sh 0.38 # n 1 # amp 0.62
+      -- ,rotR (1/4/32) $ id $ press "909oh*4" # re l 0.2 |* sp 1.49 # hpf 200 |* g 0.97 |- note 5 # b 0.02 # eq 7000 2
+      -- ,"traphh*16" # n 4 # rel 0.1 # pan "[0.4 0.65 0.4!2]*2" |* g 0.9
+      -- ,"1([11 9],16,[<2 3>])" # "808ht" |- note 8.8 # sp 2 # sh 0.2 # hpf 250 # eq' (4250*2) 12 2.2 |* g 0.88
+      -- ,mask "ftt" $ "1([11 9],16,[<2 3>])" # "660ht:6" |- note 13 # sp 2 # sh 0.15 # rel 0.2  # eq 100 (-4) # air 0.5
+      -- ,"808rim*16" # n 2 |+ nt 2.5 |* g 0.87
+      -- ,"808cr/8" # n 10 # sh 0.88 |* g 0.6 |- note 5 # hpf 5000 # l "<1!3 [1 2]>" # wider 0.7 |- acc 0.23 |- fshift 450
     ]
-  -- d3 $ revOn 2 $ chat' 16 2 ("rktgtr2:3" # b 0.005) |- note 2 # room' 0.2 0.6 # lpf 5000 # declick # l 0.95 # sp 1
-  -- d4 $ degby "0 0.1" $ juxBy 0.5 (|- nt 0.05) $ sp (euclidFull 9 16 "1" "<0.5!3 2>") # note' "5 <9 3>" # "sitar2:2" # l 1 # rel 0.3 # room' 0.13 0.4 # lpf "[9000|8000|5000]*16" # hpf 230 # phaser' (rand) 0.3 |* g 0.8 # sh 0.5 # wider 0.3 # pan (slow 4 $ range 0.2 0.8 sine)
-  -- d5 $ echoWith 3 (1/16) (\x -> x |* g 0.8 # cut 2 |+ note "[0|12]*4") $ foot 10 # note' "0" # "blank:4" # rel 0.2 # sp "<2!3 1>" # room' 0.2 0.6
-  -- d6 $ chat' 16 8 ("30grados8:0") # cut 1 # g 0.8 # sh 0.4 |* g 1.12 # delay' 0.2 0.06 0 # eq 200 2
+  d4 -- $ offcut (-0.25) ((\x -> x # ar 0.02 0.18 # sp 2 # comb (rotL 0 rand) # pan (randosc 0.3 0.7) # sh 0.4) . (resetTo "[0~]*8"))
+      $ quant 0 $ resetTo "0 0.25*2 0.75 .  0" $ chat' 4 8  "burocracia8ch:0" # cut 1 # sh 0.84 |* g 0.88 # hpf 200 # room' 0.16 0.3 # ar 0 0.2 # eq' 175 (-6) 0.2 # eq2' 12000 4 2
+  d6 $ chat' 16 8 "burocracia8:0" # cut 1 # rel 0.4 # hpf 100 # room' 0.017 0.2 # wider 0.1 # sh 0.28 |* g 1.1 # delay' "0 0.05" (nms 7 * 2) 0.93  # eq (9000) 2.2
+  -- d8 $ be' 2.19 1 "<0>" # "burocracia" # cut 0 # ts 1 # tsw 2 # sh 0.35 # delay' 0.3 0.3 0.2
+  -- d8 $ chop 16 $ be' 16 2 "13.52" # "burocracia8:2" #cut 1 # sh 0.2 # g 0.93 # formant 0.9 # delay' 0.3 0.3 0.4 # gater 0.66 # krush 0.8 # coarse 3 # hpf 200 # eq 230 (-9) # eq2 (slow 2 $ range 1500 4000 sine) 4
   getnow 8
 ```
