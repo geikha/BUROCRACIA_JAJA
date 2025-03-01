@@ -1,5 +1,5 @@
 # BUROCRACIA_JAJA
-Code for Medali & Geikha's single [*BUROCRACIA_JAJA*](https://geikha.bandcamp.com/album/burocracia-jaja-coded-02), which is in itself an edit of the song *30 Grados* by El Turko & Mandale Flow. Made using [TidalCycles](https://github.com/tidalcycles/Tidal) and [SuperCollider](https://github.com/supercollider/supercollider).
+Code for Medali & Geikha's single [*BUROCRACIA_JAJA*](https://geikha.bandcamp.com/album/burocracia-jaja-coded-02). Made using [TidalCycles](https://github.com/tidalcycles/Tidal) and [SuperCollider](https://github.com/supercollider/supercollider).
 
 [![image](./ART/BUROCRACIA_JAJA_ART.png)](https://geikha.bandcamp.com/album/burocracia-jaja-coded-02)
 
